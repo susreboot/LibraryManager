@@ -132,4 +132,4 @@ APPEND_SLASH = False
 MEDIA_ROOT = os.path.join(BASE_DIR,'static/img')
 MEDIA_URL = '/img/'
 
-django_heroku.settings(locals)
+django_heroku.settings(locals())
