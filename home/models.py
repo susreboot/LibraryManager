@@ -34,3 +34,16 @@ class AddStudent(models.Model):
     studentid=models.CharField(max_length=20)
     def __str__(self):
         return self.sname+'['+str(self.studentid)+']'
+
+class DeleteStudent(models.Model):
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    sname=models.CharField(max_length=30)
+    studentid=models.CharField(max_length=20)
+    def __str__(self):
+        return self.sname+'['+str(self.studentid)+']'
+
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
+
+    def delete_student(self):
+        self.delete()

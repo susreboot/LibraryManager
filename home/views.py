@@ -6,6 +6,16 @@ from datetime import datetime,timedelta,date
 from .models import IssueBook, UserExtend,AddBook,ReturnBook,AddStudent
 from django.contrib.auth import authenticate ,logout
 from django.contrib.auth import login as dj_login
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import DeleteStudent
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.template import Context
+
 def index(request):
     return render(request,'index.html')
 def staff(request):
@@ -19,7 +29,8 @@ def staffsignup(request):
 def dashboard(request):
     if request.session.has_key('is_logged'):
         Book = AddBook.objects.all()
-        return render(request,'dashboard.html',{'Book':Book})
+        Student=AddStudent.objects.all()
+        return render(request,'dashboard.html',{'Book':Book,'Student':Student})
     return redirect('stafflogin')
 def addbook(request):
     Book = AddBook.objects.all()
@@ -87,8 +98,9 @@ def AddBookSubmission(request):
             add = AddBook(user = user1,bookid=bookid,bookname=bookname,subject=subject,category=category)
             add.save()
             Book = AddBook.objects.all()
-            return render(request,'dashboard.html',{'Book':Book})
-    return redirect('/')
+            Student=AddStudent.objects.all()
+            return render(request,'dashboard.html',{'Book':Book,'Student':Student})
+    return redirect('dashboard')
 def deletebook(request,id):
     if request.session.has_key('is_logged'):
         AddBook_info = AddBook.objects.get(id=id)
@@ -110,27 +122,31 @@ def HandleLogout(request):
         messages.success(request, " Successfully logged out")
         return redirect('dashboard')
 def issuebooksubmission(request):
-       if request.method=='POST':
-            user_id = request.session["user_id"]
-            user1 = User.objects.get(id=user_id)
-            studentid=request.POST['studentid']
-            book1=request.POST['book1']
-            store=AddBook.objects.filter(bookid=book1)
-            def get_category(addbook):
-                if addbook.category=="Not-Issued":
-                    addbook.category="Issued"
-                    obj= IssueBook(user=user1,studentid=studentid,book1=book1)
-                    obj.save()
-                    addbook.save()
-                    
-                else:
-                    messages.error(request," Book already issued !!!")
-            category_list=list(set(map(get_category,store)))         
-            Issue=IssueBook.objects.all()
-            Student=AddStudent.objects.all()
-            Book = AddBook.objects.all()
-            return render(request,'bookissue.html',{'Issue':Issue,'Book':Book,'Student':Student})
-       return redirect('/')
+    if request.method=='POST':
+        user_id = request.session["user_id"]
+        user1 = User.objects.get(id=user_id)
+        studentid=request.POST['studentid']
+        book1=request.POST['book1']
+        store=AddBook.objects.filter(bookid=book1)
+
+        def get_category(addbook):
+            if addbook.category=="Not-Issued" or "NOT-ISSUED":
+                addbook.category="ISSUED"
+                obj= IssueBook(user=user1,studentid=studentid,book1=book1)
+                obj.save()
+                addbook.save()  
+            else:
+                messages.error(request," Book already issued !!!")
+        
+        category_list=list(set(map(get_category,store)))
+        Issue=IssueBook.objects.all()
+        Student=AddStudent.objects.all()
+        Book = AddBook.objects.all()
+
+        # redirect to viewissuedbook view after issuing a book
+        return viewissuedbook(request)
+
+    return redirect('/')
 def returnbooksubmission(request):
     if request.method=='POST':
             user_id = request.session["user_id"]
@@ -138,8 +154,8 @@ def returnbooksubmission(request):
             bookid2=request.POST['bookid2']
             store1=AddBook.objects.filter(bookid=bookid2)
             def return_book(returnbook):
-                if returnbook.category=="Issued":
-                    returnbook.category="Not-Issued"
+                if returnbook.category=="Issued" or "ISSUED":
+                    returnbook.category="NOT-ISSUED"
                     obj1=ReturnBook(user=user1,bookid2=bookid2)
                     obj=IssueBook.objects.filter(book1=bookid2)
                     obj.delete()
@@ -151,6 +167,7 @@ def returnbooksubmission(request):
             Return= ReturnBook.objects.all()
             Student=AddStudent.objects.all()
             Book = AddBook.objects.all()
+            
             return render(request,'returnbook.html',{'Return':Return,'Book':Book,'Student':Student})
     return redirect('/')
 def Search(request):
@@ -161,8 +178,8 @@ def Search(request):
         return render(request,'dashboard.html',params)
     return redirect("login") 
 def editbookdetails(request,id):
+    Book = AddBook.objects.get(id=id)
     if request.session.has_key('is_logged'):
-        Book = AddBook.objects.get(id=id)
         return render(request,'editdetails.html',{'Book':Book})
     return redirect('login')
 
@@ -173,21 +190,22 @@ def updatedetails(request,id):
                 add.bookid=request.POST["bookid"]
                 add.bookname=request.POST["bookname"]
                 add.subject=request.POST["subject"]
-                add.ContactNumber=request.POST['category']
+                # add.ContactNumber=request.POST['category']
                 add.save()
                 return redirect("dashboard")
     return redirect('login')
 
 def addstudent(request):
     if request.session.has_key('is_logged'):
-       return render(request,'addstudent.html')
+        Student=AddStudent.objects.all()
+        return render(request,'addstudent.html',{'Student':Student})
     return redirect ('login')
 
 def viewstudents(request):
     if request.session.has_key('is_logged'):
         Student=AddStudent.objects.all()
         return render(request,'viewstudents.html',{'Student':Student})
-    return redirect('stafflogin')
+    return redirect('/')
 
 def Searchstudent(request):
     if request.session.has_key('is_logged'):
@@ -212,34 +230,86 @@ def addstudentsubmission(request):
 
 def viewissuedbook(request):
     if request.session.has_key('is_logged'):
-        issuedbooks=IssueBook.objects.all()
-        lis=[]
-        li=[]
+        issuedbooks = IssueBook.objects.all()
+        lis = []
         for books in issuedbooks:
-            issdate=str(books.issuedate.day)+'-'+str(books.issuedate.month)+'-'+str(books.issuedate.year)
-            expdate=str(books.expirydate.day)+'-'+str(books.expirydate.month)+'-'+str(books.expirydate.year)
-            #fine calculation
-            days=(date.today()-books.issuedate)
-            d=days.days
-            fine=0
-            if d>15:
-                day=d-15
-                fine=day*10
+            issdate = str(books.issuedate.day)+'-'+str(books.issuedate.month)+'-'+str(books.issuedate.year)
+            expdate = str(books.expirydate.day)+'-'+str(books.expirydate.month)+'-'+str(books.expirydate.year)
+            # fine calculation
+            days = (date.today()-books.issuedate)
+            d = days.days
+            fine = 0
+            if d > 15:
+                day = d - 15
+                fine = day * 10
             print(d)
 
-            book=list(AddBook.objects.filter(bookid=books.book1))
-            students=list(AddStudent.objects.filter(studentid=books.studentid))
+            book = list(AddBook.objects.filter(bookid=books.book1))
+            students = list(AddStudent.objects.filter(studentid=books.studentid))
             print(book)
             print(students)
-            i=0
-            for k in book:
-                print(li)
-                t=(students[i].sname,students[i].studentid,book[i].bookname,book[i].subject,issdate,expdate,fine)
-                print(t)
-                i=i+1
+
+            for s, b in zip(students, book):
+                t = (s.sname, s.studentid, b.bookname, b.subject, issdate, expdate, fine)
                 lis.append(t)
                 print(lis)
 
-        return render(request,'viewissuedbook.html',{'lis':lis})
+        return render(request, 'viewissuedbook.html', {'lis': lis})
+
     return redirect('/')
 
+def delete_student(request, id):
+    if request.session.has_key('is_logged'):
+        student = AddStudent.objects.get(id=id)
+        student.delete()
+        return redirect('dashboard')
+    return redirect('login')
+
+def pdf_view(request):
+    # Get the data for the tables
+    issued_books = ...
+    students = ...
+
+    # Define the table headers and data for issued_books
+    issued_books_headers = ('Student Name', 'Student ID', 'Book Name', 'Subject', 'Issued Date', 'Return Date', 'Fine')
+    issued_books_data = []
+    for info in issued_books:
+        issued_books_data.append([info[0], info[1], info[2], info[3], info[4], info[5], info[6]])
+
+    # Define the table headers and data for students
+    students_headers = ('Student Name', 'Student ID')
+    students_data = []
+    for info in students:
+        students_data.append([info.sname, info.studentid])
+
+    # Create a response object with the content type set to PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="issued_books.pdf"'
+
+    # Create the PDF object
+    pdf = canvas.Canvas(response, pagesize=letter)
+
+    # Define the table style
+    table_style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 1), (-1, -1), 12),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
+
+    # Create the tables
+    issued_books_table = Table([issued_books_headers] + issued_books_data, colWidths=[1.5 * inch] * 7)
+    issued_books_table.setStyle(table_style)
+    students_table = Table([students_headers] + students_data, colWidths=[1.5 * inch] * 2)
+    students_table.setStyle(table_style)
+
+    # Add the tables to the PDF
+    elements

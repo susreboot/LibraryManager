@@ -1,5 +1,7 @@
 from django.urls import path
+from .views import pdf_view
 from . import views
+
 urlpatterns = [
     path('',views.index,name='index'),
     path('staff/',views.staff,name='staff'),
@@ -23,5 +25,7 @@ urlpatterns = [
     path('addstudent/',views.addstudent,name='addstudent'),
     path('addstudentsubmission/',views.addstudentsubmission,name='addstudentsubmission'),
     path('viewissuedbook/',views.viewissuedbook,name='viewissuedbook'),
-    path('viewstudents/',views.viewstudents,name='viewstudents')
-]
+    path('viewstudents/',views.viewstudents,name='viewstudents'),
+    path('deletestudent/<int:id>/', views.delete_student, name='deletestudent'),
+    path('pdf/', pdf_view, name='pdf_view'),
+] 
