@@ -7,8 +7,8 @@
     <meta charset="utf-8">
     <title>Library Management System</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+    <link rel="stylesheet" type="text/css" href="../static/font-awesome.css">
   </head>
 <script>
   const menuIconEl = $('.menu-icon');
@@ -39,19 +39,18 @@
   {% for message in messages %}
   <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
     <strong>Message :</strong>{{ message }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    
   </div>
   {% endfor %} 
 </div>
 <script type="text/javascript"> 
-    $(function(){
-    setTimeout(function(){
-        $("#alert-message").hide();
-        }, 2000);
-      });
-    </script>
+  $(function(){
+      setTimeout(function(){
+        $("#alert-message").fadeOut();
+      }, 500);
+  });
+</script>
+
 
 <script type="text/javascript">
   `use strict`;
@@ -65,14 +64,12 @@
 </script>
 <body>
   <div class="grid-container">
-    <div class="menu-icon">
-    <i class="fas fa-bars header__menu"></i>
-  </div>
-    
+
   <header class="header">
-    <h1><i class="fa fa-tachometer fa-lg"> DASHBOARD</i> <i class="fa fa-tachometer fa-lg"></i> </h1>
-    
+    <h1> <i class="fa fa-tachometer fa-lg"></i> DASHBOARD</h1>
   </header>
+
+  
 
   <aside class="sidenav">
     <a href="/dashboard/">
@@ -84,8 +81,8 @@
     <ul class="sidenav__list">
       <li class="sidenav__list-item"><a href="/dashboard/"><i class="fa fa-tachometer"></i> Dashboard</a></li>
       <li class="sidenav__list-item"><a href="/addbook/"><i class="fa fa-book"></i> Add Book</a></li>
+      <li class="sidenav__list-item"><a href="/viewstudents/"><i class="fa fa-address-book"></i> View Patrons</a></li>
       <li class="sidenav__list-item"><a href="/addstudent/"><i class="fa fa-users"></i> Add Patron</a></li>
-      <li class="sidenav__list-item"><a href="/viewstudents/"><i class="fa fa-users"></i> View Patrons</a></li>
       <li class="sidenav__list-item"><a href="/viewissuedbook/"><i class="fa fa-search"></i> View Issued Books</a></li>
       <li class="sidenav__list-item"><a href="/bookissue/"><i class="fa fa-bookmark"></i> Issue Book</a></li>
       <li class="sidenav__list-item"><a href="/returnbook/"><i class="fa fa-undo"></i> Return Book</a></li>

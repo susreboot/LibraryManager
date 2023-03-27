@@ -10399,19 +10399,7 @@ body {
   height: 100vh;
 }
 
-.menu-icon {
-  position: fixed; /* Needs to stay visible for all mobile scrolling */
-  display: flex;
-  top: 5px;
-  left: 10px;
-  align-items: center;
-  justify-content: center;
-  background-color: #DADAE3;
-  border-radius: 50%;
-  z-index: 1;
-  cursor: pointer;
-  padding: 12px;
-}
+
 
 /* Give every child element its grid name */
 .header {
@@ -10420,7 +10408,7 @@ body {
   align-items: center !important;
   justify-content: space-between;
   background-color: #14364d!important;
-  width:94vw;
+  width:100vw;
   padding-right: 20%;
   padding-left: 20%;
 }

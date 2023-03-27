@@ -6,24 +6,14 @@
     <meta charset="utf-8">
     <title>Library Management System</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">  
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/font-awesome.css">
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
   </head>
   <body>
 
     <div class="grid-container">
-      <div class="menu-icon">
-        <i class="fas fa-bars header__menu"></i>
-      </div>
-
       <header class="header">
-        <!-- <div class="header__search">
-          <form method="get" action="/Search/">
-            <input type="text" placeholder="Search by Book id" name="query2" id="query2">
-            <button type="submit">Submit</button>
-          </form>
-        </div> -->
-        <h1> RETURN BOOK </h1>
+        <h1> <i class="fa fa-undo fa-lg"></i> RETURN BOOKS</h1>
       </header>
 
       <aside class="sidenav">
@@ -36,8 +26,8 @@
         <ul class="sidenav__list">
           <li class="sidenav__list-item"><a href="/dashboard/"><i class="fa fa-tachometer"></i> Dashboard</a></li>
           <li class="sidenav__list-item"><a href="/addbook/"><i class="fa fa-book"></i> Add Book</a></li>
+          <li class="sidenav__list-item"><a href="/viewstudents/"><i class="fa fa-address-book"></i> View Patrons</a></li>
           <li class="sidenav__list-item"><a href="/addstudent/"><i class="fa fa-users"></i> Add Patron</a></li>
-          <li class="sidenav__list-item"><a href="/viewstudents/"><i class="fa fa-users"></i> View Patrons</a></li>
           <li class="sidenav__list-item"><a href="/viewissuedbook/"><i class="fa fa-search"></i> View Issued Books</a></li>
           <li class="sidenav__list-item"><a href="/bookissue/"><i class="fa fa-bookmark"></i> Issue Book</a></li>
           <li class="sidenav__list-item"><a href="/returnbook/"><i class="fa fa-undo"></i> Return Book</a></li>
