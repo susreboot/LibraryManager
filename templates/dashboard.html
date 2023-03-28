@@ -10,6 +10,14 @@
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
     <link rel="stylesheet" type="text/css" href="../static/font-awesome.css">
   </head>
+  <style>
+    .right {
+    float: right;
+    }
+    .left {
+    float: left;
+}
+  </style>
 <script>
   const menuIconEl = $('.menu-icon');
   const sidenavEl = $('.sidenav');
@@ -66,7 +74,9 @@
   <div class="grid-container">
 
   <header class="header">
-    <h1> <i class="fa fa-tachometer fa-lg"></i> DASHBOARD</h1>
+    <h1> <i class="fa fa-tachometer fa-1x"></i> DASHBOARD</h1>
+    <h2 id="time"> 
+    </h2>
   </header>
 
   
@@ -79,7 +89,7 @@
       <i class="fas fa-times sidenav__brand-close"></i>
     </div>
     <ul class="sidenav__list">
-      <li class="sidenav__list-item"><a href="/dashboard/"><i class="fa fa-tachometer"></i> Dashboard</a></li>
+      <!-- <li class="sidenav__list-item"><a href="/dashboard/"><i class="fa fa-tachometer"></i> Dashboard</a></li> -->
       <li class="sidenav__list-item"><a href="/addbook/"><i class="fa fa-book"></i> Add Book</a></li>
       <li class="sidenav__list-item"><a href="/viewstudents/"><i class="fa fa-address-book"></i> View Patrons</a></li>
       <li class="sidenav__list-item"><a href="/addstudent/"><i class="fa fa-users"></i> Add Patron</a></li>
@@ -94,8 +104,11 @@
     <div>
       </br></br>
       <div class="table-container">
-        <div class="table-container" style="border-style: solid; border-color: white; padding:10px; padding-bottom:20px; margin-left:15%; margin-right:15%;">
+       
+        <br>
         <h1> LIBRARY BOOKS </h1>
+        <div class="table-container" style="border-style: solid; border-color: white; padding:10px; padding-bottom:20px; margin-left:15.5%; margin-right:15.5%;">
+        
       </br></br>
         <table class="blueTable" id="dataTable" width="100%" cellspacing="0">
             <thead style="background-color: #00a6cc;">
@@ -150,14 +163,40 @@
           </table> <br><br>
       </div>
     </div>
-    <h1 style="
-          margin: 0 auto;
-          text-align: center;
-          padding: 10px;"> 
-          <span id="time"> 
-          </span>
-    </h1>
+  </br></br>
+  <div class="table-container" style="border-style: solid; border-color: white; padding:10px; padding-bottom:20px; margin-left:15%; margin-right:15%;">
+        <h1> ISSUED BOOKS</h1>
+      </br></br>
+        <table class="blueTable" id="dataTable" width="100%" cellspacing="0" border="1" style="border: 1px solid black;"> 
+          <thead style="background-color: #00a6cc;">
+                    <th>Student Name</th>
+                    <th>Student id </th>
+                    <th>Book Name</th>
+                    <th>Subject</th>
+                    <th>Issued Date</th>
+                    <th>Return Date</th>
+
+                </tr>
+            </thead>
+        {% for info in lis %}
+                <tr>
+                    <td>{{info.0}}</td>
+                    <td>{{info.1}}</td>
+                    <td>{{info.2}}</td>
+                    <td>{{info.3}}</td>
+                    <td>{{info.4}}</td>
+                    <td>{{info.5}}</td>
+
+                    
+                </tr>
+    
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+    <br><br>
   </div>
+  
   </main>
 
 </body>

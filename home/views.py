@@ -30,7 +30,30 @@ def dashboard(request):
     if request.session.has_key('is_logged'):
         Book = AddBook.objects.all()
         Student=AddStudent.objects.all()
-        return render(request,'dashboard.html',{'Book':Book,'Student':Student})
+        issuedbooks = IssueBook.objects.all()
+        lis = []
+        for books in issuedbooks:
+            issdate = str(books.issuedate.month)+'-'+str(books.issuedate.day)+'-'+str(books.issuedate.year)
+            expdate = str(books.expirydate.month)+'-'+str(books.expirydate.day)+'-'+str(books.expirydate.year)
+            # fine calculation
+            days = (date.today()-books.issuedate)
+            d = days.days
+            fine = 0
+            if d > 15:
+                day = d - 15
+                fine = day * 10
+            print(d)
+
+            book = list(AddBook.objects.filter(bookid=books.book1))
+            students = list(AddStudent.objects.filter(studentid=books.studentid))
+            print(book)
+            print(students)
+
+            for s, b in zip(students, book):
+                t = (s.sname, s.studentid, b.bookname, b.subject, issdate, expdate, fine)
+                lis.append(t)
+                print(lis)
+        return render(request,'dashboard.html',{'Book':Book,'Student':Student,'lis': lis})
     return redirect('stafflogin')
 def addbook(request):
     Book = AddBook.objects.all()
@@ -110,7 +133,30 @@ def deletebook(request,id):
 def bookissue(request):
     Student=AddStudent.objects.all()
     Book = AddBook.objects.all()
-    return render(request,'bookissue.html',{'Book':Book,'Student':Student} )
+    issuedbooks = IssueBook.objects.all()
+    lis = []
+    for books in issuedbooks:
+        issdate = str(books.issuedate.month)+'-'+str(books.issuedate.day)+'-'+str(books.issuedate.year)
+        expdate = str(books.expirydate.month)+'-'+str(books.expirydate.day)+'-'+str(books.expirydate.year)
+        # fine calculation
+        days = (date.today()-books.issuedate)
+        d = days.days
+        fine = 0
+        if d > 15:
+            day = d - 15
+            fine = day * 10
+        print(d)
+
+        book = list(AddBook.objects.filter(bookid=books.book1))
+        students = list(AddStudent.objects.filter(studentid=books.studentid))
+        print(book)
+        print(students)
+
+        for s, b in zip(students, book):
+            t = (s.sname, s.studentid, b.bookname, b.subject, issdate, expdate, fine)
+            lis.append(t)
+            print(lis)
+    return render(request,'bookissue.html',{'Book':Book,'Student':Student, 'lis':lis} )
 def returnbook(request):
     Student=AddStudent.objects.all()
     Book = AddBook.objects.all()
@@ -233,8 +279,8 @@ def viewissuedbook(request):
         issuedbooks = IssueBook.objects.all()
         lis = []
         for books in issuedbooks:
-            issdate = str(books.issuedate.day)+'-'+str(books.issuedate.month)+'-'+str(books.issuedate.year)
-            expdate = str(books.expirydate.day)+'-'+str(books.expirydate.month)+'-'+str(books.expirydate.year)
+            issdate = str(books.issuedate.month)+'-'+str(books.issuedate.day)+'-'+str(books.issuedate.year)
+            expdate = str(books.expirydate.month)+'-'+str(books.expirydate.day)+'-'+str(books.expirydate.year)
             # fine calculation
             days = (date.today()-books.issuedate)
             d = days.days

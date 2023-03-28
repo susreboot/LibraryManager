@@ -17,6 +17,47 @@
         newWin.close();
       }
     </script>
+
+<style>
+  .css-btn {
+    color: #FFFFFF;
+    font-size: 16px;
+    border-radius: 5px;
+    border: solid 1px #3866a3;
+    text-shadow: 1px 1px 0px #528ECC;
+    box-shadow: inset 1px 1px 0px 0px #BBDAF7;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    font-family: Arial;
+    font-weight: bold;
+    background: linear-gradient(180deg, #63B8EE 10%, #468CCF 100%);
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+  }
+  .css-btn:hover {
+    background: linear-gradient(180deg, #468CCF 10%, #63B8EE 100%);
+  }
+  .css-btn-text {
+    position: relative;
+    padding: 10px 18px;
+  }
+  .css-btn-icon {
+    position: relative;
+    border-right: 1px solid #ffffff29;
+    box-shadow: inset rgb(0 0 0 / 14%) -1px 0 0;
+    padding: 10px 10px;
+  }
+  .css-btn-icon > i {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 26px;
+  }
+  </style>
+  
   </head>
   <body>
 
@@ -36,7 +77,7 @@
         <ul class="sidenav__list">
           <li class="sidenav__list-item"><a href="/dashboard/"><i class="fa fa-tachometer"></i> Dashboard</a></li>
           <li class="sidenav__list-item"><a href="/addbook/"><i class="fa fa-book"></i> Add Book</a></li>
-          <li class="sidenav__list-item"><a href="/viewstudents/"><i class="fa fa-address-book"></i> View Patrons</a></li>
+          <!-- <li class="sidenav__list-item"><a href="/viewstudents/"><i class="fa fa-address-book"></i> View Patrons</a></li> -->
           <li class="sidenav__list-item"><a href="/addstudent/"><i class="fa fa-users"></i> Add Patron</a></li>
           <li class="sidenav__list-item"><a href="/viewissuedbook/"><i class="fa fa-search"></i> View Issued Books</a></li>
           <li class="sidenav__list-item"><a href="/bookissue/"><i class="fa fa-bookmark"></i> Issue Book</a></li>
@@ -63,8 +104,6 @@
         
       <div class="table-container">
         <h1> PATRONS</h1>
-        <button onclick="printTable()">Print</button>
-      </br></br>
         <table class="blueTable" id="dataTable" width="100%" cellspacing="0" border="1" style="border: 1px solid black;">
           <thead>
                <tr>
@@ -82,6 +121,15 @@
        {% endfor %}
         </tbody>
        </table>  
+       <br>
+       <button type="button" class="css-btn" onclick="printTable()">
+         <span class="css-btn-icon">
+           <i class="fa fa-print"></i>
+         </span>
+         <span class="css-btn-text">
+           <span>PRINT REPORT</span>
+         </span>
+       </button>
 </div>
    </main>
   

@@ -30,7 +30,7 @@
           <li class="sidenav__list-item"><a href="/viewstudents/"><i class="fa fa-address-book"></i> View Patrons</a></li>
           <li class="sidenav__list-item"><a href="/addstudent/"><i class="fa fa-users"></i> Add Patron</a></li>
           <li class="sidenav__list-item"><a href="/viewissuedbook/"><i class="fa fa-search"></i> View Issued Books</a></li>
-          <li class="sidenav__list-item"><a href="/bookissue/"><i class="fa fa-bookmark"></i> Issue Book</a></li>
+          <!-- <li class="sidenav__list-item"><a href="/bookissue/"><i class="fa fa-bookmark"></i> Issue Book</a></li> -->
           <li class="sidenav__list-item"><a href="/returnbook/"><i class="fa fa-undo"></i> Return Book</a></li>
           <li class="sidenav__list-item"><a href="/HandleLogout/"><i class="fa fa-sign-out"></i> Log Out</a></li>
         </ul>
@@ -117,6 +117,37 @@
           {% endfor %}
           </tbody>
           </table> <br><br>
+        </div>
+      </br></br>
+      <div class="table-container" style="border-style: solid; border-color: white; padding:10px; padding-bottom:20px; margin-left:15%; margin-right:15%;">
+            <h1> ISSUED BOOKS</h1>
+          </br></br>
+            <table class="blueTable" id="dataTable" width="100%" cellspacing="0" border="1" style="border: 1px solid black;"> 
+              <thead style="background-color: #00a6cc;">
+                        <th>Student Name</th>
+                        <th>Student id </th>
+                        <th>Book Name</th>
+                        <th>Subject</th>
+                        <th>Issued Date</th>
+                        <th>Return Date</th>
+    
+                    </tr>
+                </thead>
+            {% for info in lis %}
+                    <tr>
+                        <td>{{info.0}}</td>
+                        <td>{{info.1}}</td>
+                        <td>{{info.2}}</td>
+                        <td>{{info.3}}</td>
+                        <td>{{info.4}}</td>
+                        <td>{{info.5}}</td>
+    
+                        
+                    </tr>
+        
+            {% endfor %}
+            </tbody>
+            </table>
         </div>
       </div>
     </br></br>
